@@ -1,16 +1,21 @@
 import pygame,sys
 from settings import *
-
+from player_class import *
 pygame.init()
 vec = pygame.math.Vector2
 
 
 class App:
     def __init__(self):
-        self.sceen = pygame.display.set_mode((WIDTH, HEIGHT))
+        self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         self.clock = pygame.time.Clock()
         self.running = True
         self.state ='start'
+
+        self.cell_width = MAZE_WIDTH//28
+        self.cell_height = MAZE_HEIGHT//30
+
+        self.player = Player(self,PLAYER_START_POS)
 
         self.load()   #Load board
     def run(self):
@@ -19,6 +24,7 @@ class App:
                 self.state_events()
                 self.state_update()
                 self.state_draw()
+
             if self.state == 'playing':
                 self.playing_events()
                 self.playing_update()
@@ -36,9 +42,19 @@ class App:
             pos[0] = pos[0]-text_size[0]//2
             pos[1] = pos[1] - text_size[1] // 2
         screen.blit(text,pos)
+
+
     def load(self):
         self.background = pygame.image.load('board.png')
-        self.background = pygame.transform.scale(self.background,(WIDTH,HEIGHT)) ###Scale the image
+        self.background = pygame.transform.scale(self.background,(MAZE_WIDTH,MAZE_HEIGHT)) ###Scale the image
+
+    def draw_grid(self):
+        for x in range(WIDTH//self.cell_width):#Draw vertical line from left to right
+            pygame.draw.line(self.background,GREY,(x*self.cell_width,0),(x*self.cell_width,HEIGHT))
+
+        for x in range(HEIGHT//self.cell_height):#Draw horizontal line from top to bottom
+            pygame.draw.line(self.background,GREY,(0,x*self.cell_height),(WIDTH,x*self.cell_height))
+
 #######################Intro##################################
 
     def state_events(self):
@@ -52,13 +68,13 @@ class App:
     def state_update(self):
         pass
     def state_draw(self):
-        self.sceen.fill(BLACK)  #Background color
+        self.screen.fill(BLACK)  #Background color
         #######Menu#####
-        self.draw_text('Press Space Bar',self.sceen,[WIDTH//2,HEIGHT//2],
+        self.draw_text('Press Space Bar',self.screen,[WIDTH//2,HEIGHT//2],
                         START_TEXT_SIZE,(170,132,58),START_FONT,center= True)
-        self.draw_text('1 Player', self.sceen, [WIDTH // 2, HEIGHT // 2+35],
+        self.draw_text('1 Player', self.screen, [WIDTH // 2, HEIGHT // 2+35],
                        START_TEXT_SIZE, (33,137,156), START_FONT,center= True)
-        self.draw_text('High Score', self.sceen, [0,0],
+        self.draw_text('High Score', self.screen, [0,0],
                        START_TEXT_SIZE, (255, 255, 255), START_FONT)
         pygame.display.update()
 
@@ -73,5 +89,10 @@ class App:
     def playing_update(self):
         pass
     def playing_draw(self):
-        self.sceen.blit(self.background,(0,0)) #Game color
+        self.screen.fill(BLACK)
+        self.screen.blit(self.background,(TOP_BOTTOM_BUFFER//2,TOP_BOTTOM_BUFFER//2))  #Space top bottom left and right
+        self.draw_grid()
+        self.draw_text('Current Score: 0',self.screen,[10,0],18,WHITE,START_FONT)
+        self.draw_text('High Score: 0', self.screen, [WIDTH//2, 0], 18, WHITE, START_FONT)
+
         pygame.display.update()
