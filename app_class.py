@@ -16,7 +16,7 @@ class App:
         self.cell_height = MAZE_HEIGHT//30
 
         self.player = Player(self,PLAYER_START_POS)
-
+        self.walls =[]
         self.load()   #Load board
     def run(self):
         while self.running:
@@ -33,7 +33,7 @@ class App:
         pygame.quit()
         sys.exit()
 
-#######################Help##################################
+
     def draw_text(self,words,screen,pos,size,color,font_name,center = False):
         font = pygame.font.SysFont(font_name,size,)
         text = font.render(words, False,color)
@@ -46,7 +46,14 @@ class App:
 
     def load(self):
         self.background = pygame.image.load('board.png')
-        self.background = pygame.transform.scale(self.background,(MAZE_WIDTH,MAZE_HEIGHT)) ###Scale the image
+        self.background = pygame.transform.scale(self.background,(MAZE_WIDTH,MAZE_HEIGHT))
+        #open file wall and create wall liist with x and y of wall
+        with open("wall.txt",'r') as file: ###Scale the image
+            for yidx ,line in enumerate(file):
+                for xidx,char in enumerate(line):
+                    if char == "1":
+                        self.walls.append(vec(xidx,yidx))
+        print(self.walls)
 
     def draw_grid(self):
         for x in range(WIDTH//self.cell_width):#Draw vertical line from left to right
@@ -84,15 +91,24 @@ class App:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
-
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    self.player.move(vec(-1,0))
+                if event.key == pygame.K_RIGHT:
+                    self.player.move(vec(1, 0))
+                if event.key == pygame.K_UP:
+                    self.player.move(vec(0,-1))
+                if event.key == pygame.K_DOWN:
+                    self.player.move(vec(0,1))
 
     def playing_update(self):
-        pass
+        self.player.update()
     def playing_draw(self):
         self.screen.fill(BLACK)
-        self.screen.blit(self.background,(TOP_BOTTOM_BUFFER//2,TOP_BOTTOM_BUFFER//2))  #Space top bottom left and right
+        self.screen.blit(self.background,
+                         (TOP_BOTTOM_BUFFER//2,TOP_BOTTOM_BUFFER//2))  #Display sceen with space top bottom left and right
         self.draw_grid()
         self.draw_text('Current Score: 0',self.screen,[10,0],18,WHITE,START_FONT)
         self.draw_text('High Score: 0', self.screen, [WIDTH//2, 0], 18, WHITE, START_FONT)
-
+        self.player.draw()
         pygame.display.update()
