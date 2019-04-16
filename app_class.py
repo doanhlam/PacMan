@@ -53,7 +53,7 @@ class App:
                 for xidx,char in enumerate(line):
                     if char == "1":
                         self.walls.append(vec(xidx,yidx))
-        print(self.walls)
+        #print(self.walls)
 
     def draw_grid(self):
         for x in range(WIDTH//self.cell_width):#Draw vertical line from left to right
@@ -61,6 +61,12 @@ class App:
 
         for x in range(HEIGHT//self.cell_height):#Draw horizontal line from top to bottom
             pygame.draw.line(self.background,GREY,(0,x*self.cell_height),(WIDTH,x*self.cell_height))
+
+        #draw wall and visualized walls list
+        for wall in self.walls:
+            pygame.draw.rect(self.background,(112,55,173),
+                             (wall.x*self.cell_width,wall.y*self.cell_height,self.cell_width,self.cell_height))
+
 
 #######################Intro##################################
 
@@ -107,7 +113,7 @@ class App:
         self.screen.fill(BLACK)
         self.screen.blit(self.background,
                          (TOP_BOTTOM_BUFFER//2,TOP_BOTTOM_BUFFER//2))  #Display sceen with space top bottom left and right
-        self.draw_grid()
+        #self.draw_grid()
         self.draw_text('Current Score: 0',self.screen,[10,0],18,WHITE,START_FONT)
         self.draw_text('High Score: 0', self.screen, [WIDTH//2, 0], 18, WHITE, START_FONT)
         self.player.draw()

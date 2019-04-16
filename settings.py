@@ -3,7 +3,7 @@ from pygame.math import Vector2 as vec
 
 FPS = 60
 TOP_BOTTOM_BUFFER = 50
-WIDTH, HEIGHT = 680,720
+WIDTH, HEIGHT = 610,670
 MAZE_WIDTH, MAZE_HEIGHT = WIDTH-TOP_BOTTOM_BUFFER,HEIGHT-TOP_BOTTOM_BUFFER
 #color,player,ghost setting
 BLACK = (0,0,0)
