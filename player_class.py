@@ -10,6 +10,7 @@ class Player:
         self.direction = vec(1,0)
         self.store_direc = None
         self.able_to_move = True
+        self.current_score = 0
 
     def update(self):
         if self.able_to_move:
@@ -35,8 +36,19 @@ class Player:
         #                 ,self.grid_pos[1]*self.app.cell_height+TOP_BOTTOM_BUFFER//2,
         #                 self.app.cell_width,self.app.cell_height),1)
 
+
+
     def on_coin(self):
-        if self.grid_pos
+        #condition check whether pacmon on coin or not
+        if self.grid_pos in self.app.coins:
+
+            return True
+        return False
+
+    def eat_coin(self):
+        #remove coin
+        self.app.coins.remove(self.grid_pos)
+        self.current_score = self.current_score+1
     def move(self,direction):
         self.store_direc = direction
 

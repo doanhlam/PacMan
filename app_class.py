@@ -66,9 +66,9 @@ class App:
             pygame.draw.line(self.background,GREY,(0,x*self.cell_height),(WIDTH,x*self.cell_height))
 
         #draw whare the coin position
-        # for coin in self.coins:
-        #     pygame.draw.rect(self.background,(167,180,34),
-        #                      (coin.x*self.cell_width,coin.y*self.cell_height,self.cell_width,self.cell_height))
+        for coin in self.coins:
+            pygame.draw.rect(self.background,(167,180,34),
+                             (coin.x*self.cell_width,coin.y*self.cell_height,self.cell_width,self.cell_height))
 
 
 #######################Intro##################################
@@ -119,8 +119,8 @@ class App:
                          (TOP_BOTTOM_BUFFER//2,TOP_BOTTOM_BUFFER//2))  #Display sceen with space top bottom left and right
         self.draw_coins()
         # self.draw_grid()
-
-        self.draw_text('Current Score: 0',self.screen,[10,0],18,WHITE,START_FONT)
+        #pass the score in integer to the current score on the board
+        self.draw_text('Current Score: {}'.format(self.player.current_score),self.screen,[10,0],18,WHITE,START_FONT)
         self.draw_text('High Score: 0', self.screen, [WIDTH//2, 0], 18, WHITE, START_FONT)
         self.player.draw()
         pygame.display.update()
