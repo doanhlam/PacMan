@@ -3,7 +3,7 @@ from settings import *
 from player_class import *
 pygame.init()
 vec = pygame.math.Vector2
-
+from enemy_class import *
 
 class App:
     def __init__(self):
@@ -17,8 +17,13 @@ class App:
 
         self.player = Player(self,PLAYER_START_POS)
         self.walls =[]
+        self.enemies = []
+        self.e_pos=[]
         self.coins =[]
         self.load()   #Load board
+        self.make_ene()
+
+
     def run(self):
         while self.running:
             if self.state == 'start':
@@ -56,7 +61,16 @@ class App:
                         self.walls.append(vec(xidx,yidx))
                     elif char == "C":
                         self.coins.append(vec(xidx, yidx))
+                    elif char in["5","4","3","2"]:  #position enemies
+                        self.e_pos.append(vec(xidx,yidx))
+                    elif char =="B":                #pass rec argument
+                        pygame.draw.rect(self.background,BLACK,(xidx*self.cell_width,yidx*self.cell_height,
+                                                                self.cell_width,self.cell_height))
         #print(self.walls)
+    #enemy
+    def make_ene(self):
+        for idx, pos in enumerate(self.e_pos):
+            self.enemies.append(Enemy(self,pos,idx))
 
     def draw_grid(self):
         for x in range(WIDTH//self.cell_width):#Draw vertical line from left to right
@@ -112,6 +126,8 @@ class App:
 
     def playing_update(self):
         self.player.update()
+        for enemy in self.enemies:
+            enemy.update()
     def playing_draw(self):
         self.screen.fill(BLACK)
 
@@ -123,6 +139,8 @@ class App:
         self.draw_text('Current Score: {}'.format(self.player.current_score),self.screen,[10,0],18,WHITE,START_FONT)
         self.draw_text('High Score: 0', self.screen, [WIDTH//2, 0], 18, WHITE, START_FONT)
         self.player.draw()
+        for enemy in self.enemies:
+            enemy.draw()
         pygame.display.update()
          #when pacman eat, coin will disappear
 
